@@ -3,18 +3,14 @@ import cv2
 
 orb = cv2.ORB()
 bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck = True)
-Templatepath = "/home/prashant/Documents/Training Images Switches/"
+Templatepath = "PATH TO Training Image of the Switches/"
 
 # calculate descriptors for the template set
 kpTrain_LIST = []
 desTrain_LIST = []
 imgTrain_LIST = []
-for i in range(0, 9):
-	#filename = "DrumModeAutoManual_(%d).png"%(i+1)
-	#filename = "FlowGateUpDown_(%d).png"%(i+1)
-	filename = "TruckHitchCloseOpen_(%d).png"%(i+1)
-	#filename = "AugerManualOper_(%d).png"%(i+1)
-	#filename = "MixerTub_(%d).png"%(i+1)
+for i in range(0, NUMBER_OF_TRAINING_IMAGES):
+	filename = "TEMPLATE_(%d).png"%(i+1)
 	print filename
 	imgTrainColor = cv2.imread(Templatepath+filename)
 	imgTrain_LIST.append(imgTrainColor)
@@ -28,9 +24,11 @@ for i in range(0, 9):
 print "desTrain size: " + str(len(desTrain_LIST))
 
 # calculate scene descriptors
-cap = cv2.VideoCapture('SwitchVid_(4).mp4')
+# load video or access camera
+camera = cv2.VideoCapture(0)	# USE FOR CAMERA CAPTURE
+cap = cv2.VideoCapture('LOAD VIDEO FILE TO DETECT SWITCHES IN')	# USE FOR PRE_RECORDED VIDEO
 while(cap.isOpened()):
-	ret, imgCamColor = cap.read()
+	ret, imgCamColor = cap.read() # ret, imgCamColor = camera.read()
 	if (imgCamColor == None):
 		break	
 	imgCamGray = cv2.cvtColor(imgCamColor, cv2.COLOR_BGR2GRAY)
@@ -107,5 +105,6 @@ while(cap.isOpened()):
 	if cv2.waitKey(1) & 0xFF == ord('q'):
         	break
 
-cap.release()
+cap.release()	# IF VIDEO
+camera.release()	# IF CAMERA
 cv2.destroyAllWindows()
